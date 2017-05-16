@@ -1,27 +1,28 @@
 import java.io.*;
 import java.util.Arrays;
+import java.util.regex.*;
 
 public class Gobang  
 {
-	//¶¨ÒåÆåÅÌµÄ´óĞ¡
+	//å®šä¹‰æ£‹ç›˜çš„å¤§å°
 	private static int BOARD_SIZE=15;
-	//¶¨ÒåÒ»¸ö¶şÎ¬Êı×éÀ´³äµ±ÆåÅÌ
+	//å®šä¹‰ä¸€ä¸ªäºŒç»´æ•°ç»„æ¥å……å½“æ£‹ç›˜
 	private String[][] board;
 	public void initBoard()
 	{
-		//³õÊ¼»¯ÆåÅÌÊı×é
+		//åˆå§‹åŒ–æ£‹ç›˜æ•°ç»„
 		board=new String[BOARD_SIZE][BOARD_SIZE];
-		//°ÑÃ¿¸öÔªËØÉèÎª"Ê®"£¬ÔÚ¿ØÖÆÌ¨ÉÏ»­³öÆåÅÌ
+		//æŠŠæ¯ä¸ªå…ƒç´ è®¾ä¸º"å"ï¼Œåœ¨æ§åˆ¶å°ä¸Šç”»å‡ºæ£‹ç›˜
 		for(int i=0;i<BOARD_SIZE;i++)
 		{
 			for (int j=0;j<BOARD_SIZE ;j++ )
 			{
-				board[i][j]="Ê®";
+				board[i][j]="å";
 			}
 		}
 	}
 
-	//Êä³öÆåÅÌµÄ·½·¨
+	//è¾“å‡ºæ£‹ç›˜çš„æ–¹æ³•
 	public void printBoard()
 	{
 		for(int i=0;i<BOARD_SIZE;i++)
@@ -34,14 +35,14 @@ public class Gobang
 		}
 	}
 
-	//Ö±Ïß·½ÏòÅĞ¶ÏÊÇ·ñÓ®Æå,labelÊÇÇø·Ö²»Í¬ÆåÊÖËùÊ¹ÓÃÆå×ÓµÄ±êÖ¾
+	//ç›´çº¿æ–¹å‘åˆ¤æ–­æ˜¯å¦èµ¢æ£‹,labelæ˜¯åŒºåˆ†ä¸åŒæ£‹æ‰‹æ‰€ä½¿ç”¨æ£‹å­çš„æ ‡å¿—
 	public boolean linearJudgment(int x,int y,String label)
 	{
-		//ºáÏòÅĞ¶Ï
-		//È·¶¨ËÑË÷·¶Î§
+		//æ¨ªå‘åˆ¤æ–­
+		//ç¡®å®šæœç´¢èŒƒå›´
 		int rangeOfLeft=y-4;
 		int rangeOfRight=y+4;
-		//È·±£ËÑË÷·¶Î§²»³ö½ç
+		//ç¡®ä¿æœç´¢èŒƒå›´ä¸å‡ºç•Œ
 		if (rangeOfLeft<0)
 		{
 			rangeOfLeft=0;
@@ -50,15 +51,15 @@ public class Gobang
 		{
 			rangeOfRight=14;
 		}
-		//È¡³öºáÏòµÄÆå×ÓÊı¾İ
+		//å–å‡ºæ¨ªå‘çš„æ£‹å­æ•°æ®
 		int horizontalLength=rangeOfRight-rangeOfLeft+1;
-		int horizontalIndex=0;//ÅĞ¶ÏÖ¸Êı
+		int horizontalIndex=0;//åˆ¤æ–­æŒ‡æ•°
 		String[] horizontalStr=new String[horizontalLength];
 		for (int i=0;i<horizontalLength ;i++ )
 		{
 			horizontalStr[i]=board[x][i+rangeOfLeft];
 		}
-		//ÅĞ¶ÏÕâĞ©Æå×ÓÊÇ·ñÓĞÎå×ÓÁ¬Öé
+		//åˆ¤æ–­è¿™äº›æ£‹å­æ˜¯å¦æœ‰äº”å­è¿ç 
 		for (int i=0;i<horizontalLength ;i++ )
 		{
 			if (horizontalStr[i]==label)
@@ -75,11 +76,11 @@ public class Gobang
 			}
 		}
 
-		//×İÏòÅĞ¶Ï
-		//È·¶¨ËÑË÷·¶Î§
+		//çºµå‘åˆ¤æ–­
+		//ç¡®å®šæœç´¢èŒƒå›´
 		int rangeOfHigh=x-4;
 		int rangeOfLow=x+4;
-		//È·±£ËÑË÷·¶Î§²»³ö½ç
+		//ç¡®ä¿æœç´¢èŒƒå›´ä¸å‡ºç•Œ
 		if (rangeOfHigh<0)
 		{
 			rangeOfHigh=0;
@@ -88,15 +89,15 @@ public class Gobang
 		{
 			rangeOfLow=14;
 		}
-		//È¡³ö×İÏòµÄÆå×ÓÊı¾İ
+		//å–å‡ºçºµå‘çš„æ£‹å­æ•°æ®
 		int verticalLength=rangeOfLow-rangeOfHigh+1;
-		int verticalIndex=0;//ÅĞ¶ÏÖ¸Êı
+		int verticalIndex=0;//åˆ¤æ–­æŒ‡æ•°
 		String[] verticalStr=new String[verticalLength];
 		for (int i=0;i<verticalLength ;i++ )
 		{
 			verticalStr[i]=board[i+rangeOfHigh][y];
 		}
-		//ÅĞ¶ÏÕâĞ©Æå×ÓÊÇ·ñÓĞÎå×ÓÁ¬Öé
+		//åˆ¤æ–­è¿™äº›æ£‹å­æ˜¯å¦æœ‰äº”å­è¿ç 
 		for (int i=0;i<verticalLength ;i++ )
 		{
 			if (verticalStr[i]==label)
@@ -113,7 +114,7 @@ public class Gobang
 			}
 		}
 
-		//×ÛºÏÅĞ¶ÏÊÇ·ñÖ±Ïß·½ÏòÉÏÓ®ÁË
+		//ç»¼åˆåˆ¤æ–­æ˜¯å¦ç›´çº¿æ–¹å‘ä¸Šèµ¢äº†
 		if (horizontalIndex==5||verticalIndex==5)
 		{
 			return true;
@@ -122,16 +123,16 @@ public class Gobang
 			return false;
 	}
 
-	//Ğ±Ïß·½ÏòÅĞ¶ÏÊÇ·ñÓ®Æå,labelÊÇÇø·Ö²»Í¬ÆåÊÖËùÊ¹ÓÃÆå×ÓµÄ±êÖ¾
-	//ÕâÖÖ¿ÉÒÔÖ±½Ó°ÑÒ»ÌõĞ±ÏßÉÏµÄÆå×ÓÊı¾İ¶¼È¡³öÀ´
+	//æ–œçº¿æ–¹å‘åˆ¤æ–­æ˜¯å¦èµ¢æ£‹,labelæ˜¯åŒºåˆ†ä¸åŒæ£‹æ‰‹æ‰€ä½¿ç”¨æ£‹å­çš„æ ‡å¿—
+	//è¿™ç§å¯ä»¥ç›´æ¥æŠŠä¸€æ¡æ–œçº¿ä¸Šçš„æ£‹å­æ•°æ®éƒ½å–å‡ºæ¥
 	public boolean slashJudgment(int x,int y,String label)
 	{
-		//×óĞ±·½ÏòÅĞ¶Ï
-		//È·¶¨×óĞ±·½ÏòËÑË÷·¶Î§
+		//å·¦æ–œæ–¹å‘åˆ¤æ–­
+		//ç¡®å®šå·¦æ–œæ–¹å‘æœç´¢èŒƒå›´
 		int leftSlashIndex=0;
 		int leftSlashLength=15-Math.abs(x-y);
 		String[] leftSlashStr=new String[leftSlashLength];
-		//ÕÒ³öx£¬y×ø±êµÄ×îĞ¡Öµ
+		//æ‰¾å‡ºxï¼Œyåæ ‡çš„æœ€å°å€¼
 		int min=-1;
 		if (x<y)
 		{
@@ -141,15 +142,15 @@ public class Gobang
 		{
 			min=y;
 		}
-		//È·¶¨×óĞ±µÄ¿ªÊ¼×ø±ê
+		//ç¡®å®šå·¦æ–œçš„å¼€å§‹åæ ‡
 		int xLeftSlash=x-min;
 		int yLeftSlash=y-min;
-		//È¡³ö×óĞ±ÉÏµÄÆå×ÓÊı¾İ
+		//å–å‡ºå·¦æ–œä¸Šçš„æ£‹å­æ•°æ®
 		for (int i=0;i<leftSlashLength ;i++ )
 		{
 			leftSlashStr[i]=board[i+xLeftSlash][i+yLeftSlash];
 		}
-		//ÅĞ¶Ï×óĞ±ÕâĞ©Æå×ÓÊÇ·ñÓĞÎå×ÓÁ¬Öé
+		//åˆ¤æ–­å·¦æ–œè¿™äº›æ£‹å­æ˜¯å¦æœ‰äº”å­è¿ç 
 		for (int i=0;i<leftSlashLength ;i++ )
 		{
 			if (leftSlashStr[i]==label)
@@ -166,12 +167,12 @@ public class Gobang
 			}
 		}
 
-		//ÓÒĞ±·½ÏòÅĞ¶Ï
-		//È·¶¨ÓÒĞ±·½ÏòËÑË÷³¤¶È,BOARD_SIZE=15
+		//å³æ–œæ–¹å‘åˆ¤æ–­
+		//ç¡®å®šå³æ–œæ–¹å‘æœç´¢é•¿åº¦,BOARD_SIZE=15
 		int rightSlashIndex=0;
 		int rightSlashLength=BOARD_SIZE-Math.abs(14-x-y);
 		String[] rightSlashStr=new String[rightSlashLength];
-		//È¡³öÓÒĞ±ÉÏµÄÆå×ÓÊı¾İ
+		//å–å‡ºå³æ–œä¸Šçš„æ£‹å­æ•°æ®
 		for (int i=0;i<rightSlashLength ;i++ )
 		{
 			for (int j=0;j<rightSlashLength ;j++ )
@@ -182,7 +183,7 @@ public class Gobang
 				}
 			}
 		}
-		//ÅĞ¶ÏÓÒĞ±ÕâĞ©Æå×ÓÊÇ·ñÓĞÎå×ÓÁ¬Öé
+		//åˆ¤æ–­å³æ–œè¿™äº›æ£‹å­æ˜¯å¦æœ‰äº”å­è¿ç 
 		for (int i=0;i<rightSlashLength ;i++ )
 		{
 			if (rightSlashStr[i]==label)
@@ -199,7 +200,7 @@ public class Gobang
 			}
 		}
 
-		//×ÛºÏÅĞ¶ÏÊÇ·ñĞ±Ïß·½ÏòÉÏÓ®ÁË
+		//ç»¼åˆåˆ¤æ–­æ˜¯å¦æ–œçº¿æ–¹å‘ä¸Šèµ¢äº†
 		if (leftSlashIndex==5||rightSlashIndex==5)
 		{
 			return true;
@@ -208,47 +209,64 @@ public class Gobang
 			return false;
 	}
 
-	//Ö÷º¯Êı
+	//ä½¿ç”¨æ­£åˆ™è¡¨è¾¾å¼åˆ¤æ–­è¾“å…¥æ˜¯å¦åˆæ³•
+	public boolean isInputValid(String inputStr)
+	{
+		String regexStr="([1-9]|[1]\\d(?<!1[6-9])),([1-9]|[1]\\d(?<!1[6-9]))";
+		Pattern patternStr=Pattern.compile(regexStr);
+		Matcher matcher=patternStr.matcher(inputStr);
+		return matcher.matches();
+	}
+
+
+
+	//ä¸»å‡½æ•°
 	public static void main(String[] args)  throws Exception
 	{
 		Gobang gb=new Gobang();
 		gb.initBoard();
 		gb.printBoard();
-		//»ñÈ¡¼üÅÌÊäÈë
+		//è·å–é”®ç›˜è¾“å…¥
 		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 		String inputStr=null;
-		System.out.println("ÂÖµ½ÓÃ»§ÏÂÆå---------------------");
-		System.out.println("ÇëÊäÈëÄúÏÂÆåµÄ×ø±ê£¬Ó¦ÒÔx,y¸ñÊ½£º");
+		System.out.println("è½®åˆ°ç”¨æˆ·ä¸‹æ£‹---------------------");
+		System.out.println("è¯·è¾“å…¥æ‚¨ä¸‹æ£‹çš„åæ ‡ï¼Œåº”ä»¥x,yæ ¼å¼ï¼š");
 		while ((inputStr=br.readLine())!=null)
 		{
-			//°ÑÊäÈëµÄ×ø±ê·Ö¸î³Éxy×ø±ê
+			//åˆ¤æ–­è¾“å…¥æ ¼å¼æ˜¯å¦æœ‰è¯¯
+			if(!gb.isInputValid(inputStr))
+			{
+				System.out.println("è¾“å…¥æ£‹å­åæ ‡æ ¼å¼é”™è¯¯ï¼Œåº”ä»¥x,yæ ¼å¼ä¸”èŒƒå›´ä¸º(1-15)ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š");
+				continue;
+			}
+			//æŠŠè¾“å…¥çš„åæ ‡åˆ†å‰²æˆxyåæ ‡
 			String[] pasStrArr=inputStr.split(",");
-			//ÓÃ»§ÏÂÆåµÄ×ø±ê
+			//ç”¨æˆ·ä¸‹æ£‹çš„åæ ‡
 			int xPos=Integer.parseInt(pasStrArr[0]);
 			int yPos=Integer.parseInt(pasStrArr[1]);
-			//¼ÆËã»ú½øĞĞ´¦ÀíµÄ×ø±ê
+			//è®¡ç®—æœºè¿›è¡Œå¤„ç†çš„åæ ‡
 			int x=-1;
 			int y=-1;
 			int xCom=-1;
 			int yCom=-1;
-			//¼ì²âµ±Ç°´Ë´¦ÊÇ·ñ´æÔÚÆå×Ó
-			if (gb.board[yPos-1][xPos-1]!="Ê®")
+			//æ£€æµ‹å½“å‰æ­¤å¤„æ˜¯å¦å­˜åœ¨æ£‹å­
+			if (gb.board[yPos-1][xPos-1]!="å")
 			{
-				System.out.println("ÊäÈëÆå×Ó×ø±ê´íÎó£¬´Ë´¦ÒÑÓĞÆå×Ó£¬ÇëÖØĞÂÊäÈë£º");
+				System.out.println("è¾“å…¥æ£‹å­åæ ‡é”™è¯¯ï¼Œæ­¤å¤„å·²æœ‰æ£‹å­ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š");
 				continue;
 			}
-			//"¡ñ"ÎªÓÃ»§£¬"¡ğ"Îª¼ÆËã»ú
-			gb.board[yPos-1][xPos-1]="¡ñ";
-			//Ã¿¸öÓÃ»§ÏÂÍêºóÖØĞÂ´òÓ¡ÆåÅÌ
+			//"â—"ä¸ºç”¨æˆ·ï¼Œ"â—‹"ä¸ºè®¡ç®—æœº
+			gb.board[yPos-1][xPos-1]="â—";
+			//æ¯ä¸ªç”¨æˆ·ä¸‹å®Œåé‡æ–°æ‰“å°æ£‹ç›˜
 			gb.printBoard();
 			x=yPos-1;
 			y=xPos-1;
-			//ĞèÒªÉ¨Ãè½øĞĞÅĞ¶ÏÊÇ·ñ³öÏÖÓÃ»§Ó®ÆåµÄÇé¿ö
-			//ÎÒ¾õµÃ²»´íµÄÅĞ¶Ï·½·¨ÊÇÃ¿´ÎÊäÈëÒ»¸öĞÂµÄÆå×ÓÊ±¶ÔÕâ¸öÆå×ÓÄÜ·ñ¹¹³ÉÓ®Æå½øĞĞÅĞ¶Ï
-			if (gb.linearJudgment(x,y,"¡ñ")||gb.slashJudgment(x,y,"¡ñ"))
+			//éœ€è¦æ‰«æè¿›è¡Œåˆ¤æ–­æ˜¯å¦å‡ºç°ç”¨æˆ·èµ¢æ£‹çš„æƒ…å†µ
+			//æˆ‘è§‰å¾—ä¸é”™çš„åˆ¤æ–­æ–¹æ³•æ˜¯æ¯æ¬¡è¾“å…¥ä¸€ä¸ªæ–°çš„æ£‹å­æ—¶å¯¹è¿™ä¸ªæ£‹å­èƒ½å¦æ„æˆèµ¢æ£‹è¿›è¡Œåˆ¤æ–­
+			if (gb.linearJudgment(x,y,"â—")||gb.slashJudgment(x,y,"â—"))
 			{
-				System.out.println("ÓÃ»§Ó®ÁË£¡");
-				System.out.println("ÇëÊäÈëY/NÈ·¶¨ÊÇ·ñÍË³ö£¬ÊäÈëYÔòÍË³ö£¬ÊäÈëNÔòÖØĞÂ¿ªÊ¼£º");
+				System.out.println("ç”¨æˆ·èµ¢äº†ï¼");
+				System.out.println("è¯·è¾“å…¥Y/Nç¡®å®šæ˜¯å¦é€€å‡ºï¼Œè¾“å…¥Yåˆ™é€€å‡ºï¼Œè¾“å…¥Nåˆ™é‡æ–°å¼€å§‹ï¼š");
 				inputStr=br.readLine();
 				if (inputStr.equals("Y"))
 				{
@@ -258,36 +276,36 @@ public class Gobang
 				{
 					gb.initBoard();
 					gb.printBoard();
-					System.out.println("ÂÖµ½ÓÃ»§ÏÂÆå---------------------");
-					System.out.println("ÇëÊäÈëÄúÏÂÆåµÄ×ø±ê£¬Ó¦ÒÔx,y¸ñÊ½£º");
+					System.out.println("è½®åˆ°ç”¨æˆ·ä¸‹æ£‹---------------------");
+					System.out.println("è¯·è¾“å…¥æ‚¨ä¸‹æ£‹çš„åæ ‡ï¼Œåº”ä»¥x,yæ ¼å¼ï¼š");
 					continue;
 				}
 			}
-			//´Ë´¦Ëæ»úÉú³ÉÁ½¸ö×ø±ê×÷ÎªµçÄÔµÄÆå×Ó×ø±ê£¬×ø±ê·¶Î§Îª[1,16)µÄÕûÊı
-			System.out.println("ÂÖµ½µçÄÔÏÂÆå---------------------");
+			//æ­¤å¤„éšæœºç”Ÿæˆä¸¤ä¸ªåæ ‡ä½œä¸ºç”µè„‘çš„æ£‹å­åæ ‡ï¼Œåæ ‡èŒƒå›´ä¸º[1,16)çš„æ•´æ•°
+			System.out.println("è½®åˆ°ç”µè„‘ä¸‹æ£‹---------------------");
 			int xPosCom=-1;
 			int yPosCom=-1;
-			//¼ì²âµ±Ç°´Ë´¦ÊÇ·ñ´æÔÚÆå×Ó
+			//æ£€æµ‹å½“å‰æ­¤å¤„æ˜¯å¦å­˜åœ¨æ£‹å­
 			do
 			{
 				xPosCom=(int)(Math.random()*15+1);
 				yPosCom=(int)(Math.random()*15+1);
 			}
-			while (gb.board[yPosCom-1][xPosCom-1]!="Ê®");
-			gb.board[yPosCom-1][xPosCom-1]="¡ğ";
-			//ĞèÒªÉ¨Ãè½øĞĞÅĞ¶ÏÊÇ·ñ³öÏÖµçÄÔÓ®ÆåµÄÇé¿ö
-			//ÖØĞÂ´òÓ¡ÆåÅÌÒÔ¼°Æå×Ó
+			while (gb.board[yPosCom-1][xPosCom-1]!="å");
+			gb.board[yPosCom-1][xPosCom-1]="â—‹";
+			//éœ€è¦æ‰«æè¿›è¡Œåˆ¤æ–­æ˜¯å¦å‡ºç°ç”µè„‘èµ¢æ£‹çš„æƒ…å†µ
+			//é‡æ–°æ‰“å°æ£‹ç›˜ä»¥åŠæ£‹å­
 			gb.printBoard();
 			xCom=yPosCom-1;
 			yCom=xPosCom-1;
-			if (gb.linearJudgment(xCom,yCom,"¡ğ")||gb.slashJudgment(xCom,yCom,"¡ğ"))
+			if (gb.linearJudgment(xCom,yCom,"â—‹")||gb.slashJudgment(xCom,yCom,"â—‹"))
 			{
-				System.out.println("µçÄÔÓ®ÁË£¡¼ÌĞøÏÂÒ»¾Ö£º");				
+				System.out.println("ç”µè„‘èµ¢äº†ï¼ç»§ç»­ä¸‹ä¸€å±€ï¼š");				
 				gb.initBoard();
 				gb.printBoard();
 			}
-			System.out.println("ÂÖµ½ÓÃ»§ÏÂÆå---------------------");
-			System.out.println("ÇëÊäÈëÄúÏÂÆåµÄ×ø±ê£¬Ó¦ÒÔx,y¸ñÊ½£º");
+			System.out.println("è½®åˆ°ç”¨æˆ·ä¸‹æ£‹---------------------");
+			System.out.println("è¯·è¾“å…¥æ‚¨ä¸‹æ£‹çš„åæ ‡ï¼Œåº”ä»¥x,yæ ¼å¼ï¼š");
 		}
 	}
 }
