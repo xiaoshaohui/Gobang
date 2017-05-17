@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.Arrays;
+import java.util.regex.*;
 
 public class Gobang  
 {
@@ -208,6 +209,17 @@ public class Gobang
 			return false;
 	}
 
+
+	//使用正则表达式判断输入是否合法
+	public boolean isInputValid(String inputStr)
+	{
+		String regexStr="([1-9]|[1]\\d(?<!1[6-9])),([1-9]|[1]\\d(?<!1[6-9]))";
+		Pattern patternStr=Pattern.compile(regexStr);
+		Matcher matcher=patternStr.matcher(inputStr);
+		return matcher.matches();
+	}
+
+
 	//主函数
 	public static void main(String[] args)  throws Exception
 	{
@@ -221,6 +233,12 @@ public class Gobang
 		System.out.println("请输入您下棋的坐标，应以x,y格式：");
 		while ((inputStr=br.readLine())!=null)
 		{
+			//判断输入格式是否有误
+			if(!gb.isInputValid(inputStr))
+			{
+				System.out.println("输入棋子坐标格式错误，应以x,y格式且范围为(1-15)，请重新输入：");
+				continue;
+			}
 			//把输入的坐标分割成xy坐标
 			String[] pasStrArr=inputStr.split(",");
 			//用户下棋的坐标
