@@ -226,7 +226,7 @@ public class Gobang
 	{
 		//取得系统默认的国家和语言环境
 		Locale myLocale=Locale.getDefault(Locale.Category.FORMAT);
-		//根据国家加载资源文件
+		//根据国家加载不同的资源文件
 		ResourceBundle bundle=ResourceBundle.getBundle("Gobang",myLocale);
 
 		Gobang gb=new Gobang();
