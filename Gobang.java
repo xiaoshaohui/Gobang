@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.Arrays;
 import java.util.regex.*;
+import java.util.*;
 
 public class Gobang  
 {
@@ -223,20 +224,25 @@ public class Gobang
 	//主函数
 	public static void main(String[] args)  throws Exception
 	{
+		//取得系统默认的国家和语言环境
+		Locale myLocale=Locale.getDefault(Locale.Category.FORMAT);
+		//根据国家加载资源文件
+		ResourceBundle bundle=ResourceBundle.getBundle("Gobang",myLocale);
+
 		Gobang gb=new Gobang();
 		gb.initBoard();
 		gb.printBoard();
 		//获取键盘输入
 		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
 		String inputStr=null;
-		System.out.println("轮到用户下棋---------------------");
-		System.out.println("请输入您下棋的坐标，应以x,y格式：");
+		System.out.println(bundle.getString("轮到用户下棋---------------------"));
+		System.out.println(bundle.getString("请输入您下棋的坐标，应以x,y格式："));
 		while ((inputStr=br.readLine())!=null)
 		{
 			//判断输入格式是否有误
 			if(!gb.isInputValid(inputStr))
 			{
-				System.out.println("输入棋子坐标格式错误，应以x,y格式且范围为(1-15)，请重新输入：");
+				System.out.println(bundle.getString("输入棋子坐标格式错误，应以x,y格式且范围为(1-15)，请重新输入："));
 				continue;
 			}
 			//把输入的坐标分割成xy坐标
@@ -252,7 +258,7 @@ public class Gobang
 			//检测当前此处是否存在棋子
 			if (gb.board[yPos-1][xPos-1]!="十")
 			{
-				System.out.println("输入棋子坐标错误，此处已有棋子，请重新输入：");
+				System.out.println(bundle.getString("输入棋子坐标错误，此处已有棋子，请重新输入："));
 				continue;
 			}
 			//"●"为用户，"○"为计算机
@@ -265,8 +271,8 @@ public class Gobang
 			//我觉得不错的判断方法是每次输入一个新的棋子时对这个棋子能否构成赢棋进行判断
 			if (gb.linearJudgment(x,y,"●")||gb.slashJudgment(x,y,"●"))
 			{
-				System.out.println("用户赢了！");
-				System.out.println("请输入Y/N确定是否退出，输入Y则退出，输入N则重新开始：");
+				System.out.println(bundle.getString("用户赢了！"));
+				System.out.println(bundle.getString("请输入Y/N确定是否退出，输入Y则退出，输入N则重新开始："));
 				inputStr=br.readLine();
 				if (inputStr.equals("Y"))
 				{
@@ -276,13 +282,13 @@ public class Gobang
 				{
 					gb.initBoard();
 					gb.printBoard();
-					System.out.println("轮到用户下棋---------------------");
-					System.out.println("请输入您下棋的坐标，应以x,y格式：");
+					System.out.println(bundle.getString("轮到用户下棋---------------------"));
+					System.out.println(bundle.getString("请输入您下棋的坐标，应以x,y格式："));
 					continue;
 				}
 			}
 			//此处随机生成两个坐标作为电脑的棋子坐标，坐标范围为[1,16)的整数
-			System.out.println("轮到电脑下棋---------------------");
+			System.out.println(bundle.getString("轮到电脑下棋---------------------"));
 			int xPosCom=-1;
 			int yPosCom=-1;
 			//检测当前此处是否存在棋子
@@ -300,12 +306,12 @@ public class Gobang
 			yCom=xPosCom-1;
 			if (gb.linearJudgment(xCom,yCom,"○")||gb.slashJudgment(xCom,yCom,"○"))
 			{
-				System.out.println("电脑赢了！继续下一局：");				
+				System.out.println(bundle.getString("电脑赢了！继续下一局："));				
 				gb.initBoard();
 				gb.printBoard();
 			}
-			System.out.println("轮到用户下棋---------------------");
-			System.out.println("请输入您下棋的坐标，应以x,y格式：");
+			System.out.println(bundle.getString("轮到用户下棋---------------------"));
+			System.out.println(bundle.getString("请输入您下棋的坐标，应以x,y格式："));
 		}
 	}
 }
