@@ -256,9 +256,18 @@ public class Gobang
 			int xCom=-1;
 			int yCom=-1;
 			//检测当前此处是否存在棋子
-			if (gb.board[yPos-1][xPos-1]!="十")
+			//进行异常处理
+			try
 			{
-				System.out.println(bundle.getString("输入棋子坐标错误，此处已有棋子，请重新输入："));
+				if (gb.board[yPos-1][xPos-1]!="十")
+				{
+					System.out.println(bundle.getString("输入棋子坐标错误，此处已有棋子，请重新输入："));
+					continue;
+				}
+			}
+			catch(IndexOutOfBoundsException ioobe)
+			{
+				System.out.println(bundle.getString("输入棋子坐标格式错误，应以x,y格式且范围为(1-15)，请重新输入："));
 				continue;
 			}
 			//"●"为用户，"○"为计算机
