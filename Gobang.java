@@ -11,7 +11,7 @@ public class Gobang
 	private String[][] board;
 	public void initBoard()
 	{
-		//初始化棋盘数组
+		//初始化棋盘数组12
 		board=new String[BOARD_SIZE][BOARD_SIZE];
 		//把每个元素设为"十"，在控制台上画出棋盘
 		for(int i=0;i<BOARD_SIZE;i++)
